@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="mainRoot" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="group.lab6.lab6.controller.MainController">
+
+    <top>
+        <VBox>
+            <MenuBar>
+                <Menu text="Файл">
+                    <MenuItem text="Выход" onAction="#handleExit"/>
+                </Menu>
+                <Menu text="Операции">
+                    <MenuItem text="Добавить новую пластинку" onAction="#handleAddNewInstance"/>
+                    <MenuItem text="Добавить Б/У пластинку" onAction="#handleAddUsedInstance"/>
+                    <MenuItem text="Продать пластинку" onAction="#handleSell"/>
+                    <MenuItem text="Управление поставщиками" onAction="#handleManageSuppliers"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem text="Отчёты" onAction="#handleReports"/>
+                </Menu>
+                <Menu text="Справка">
+                    <MenuItem text="О программе" onAction="#handleAbout"/>
+                </Menu>
+            </MenuBar>
+
+            <HBox alignment="CENTER" spacing="10" style="-fx-padding: 10;">
+                <Label text="Быстрый поиск:"/>
+                <TextField fx:id="quickSearchField" promptText="Исполнитель или название"/>
+                <Button text="Найти" onAction="#handleQuickSearch" defaultButton="true"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox alignment="CENTER" spacing="20">
+            <Label text="Добро пожаловать в АРМ Менеджера Винилового Магазина" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <Label text="Выберите действие из меню выше"/>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" style="-fx-padding: 10;">
+            <Label fx:id="userLabel" text="Пользователь: "/>
+            <Button text="Сменить язык" onAction="#handleChangeLanguage"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>
