@@ -2,42 +2,52 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="15" alignment="TOP_CENTER" xmlns="http://javafx.com/javafx/21"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="group.lab6.lab6.controller.SellController">
+<VBox alignment="TOP_CENTER" prefHeight="307.0" prefWidth="482.0" spacing="15" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="group.lab6.lab6.controller.SellController">
 
     <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
+        <Insets bottom="20" left="20" right="20" top="20" />
     </padding>
 
-    <Label text="Продажа пластинки"/>
+    <Label text="Продажа пластинки" />
 
-    <GridPane hgap="10" vgap="10">
-        <Label text="Пластинка:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-        <Label fx:id="instanceInfoLabel" GridPane.rowIndex="0" GridPane.columnIndex="1" wrapText="true"/>
+    <GridPane hgap="10" prefHeight="127.0" prefWidth="370.0" vgap="10">
+        <Label text="Пластинка:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <Label fx:id="instanceInfoLabel" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-        <Label text="Номер чека:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-        <TextField fx:id="checkNumberField" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="200" promptText="Уникальный номер чека"/>
+        <Label text="Номер чека:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <TextField fx:id="checkNumberField" prefHeight="26.0" prefWidth="162.0" promptText="Уникальный номер чека" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-        <Label text="Способ оплаты:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="paymentMethodComboBox" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="200"/>
+        <Label text="Способ оплаты:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <ComboBox fx:id="paymentMethodComboBox" prefHeight="26.0" prefWidth="164.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-        <Label text="Итоговая цена:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-        <TextField fx:id="finalPriceField" GridPane.rowIndex="3" GridPane.columnIndex="1" promptText="Оставьте пустым для цены из экземпляра"/>
+        <Label text="Итоговая цена:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <TextField fx:id="finalPriceField" prefHeight="26.0" prefWidth="162.0" promptText="Оставьте пустым для цены из экземпляра" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <columnConstraints>
+         <ColumnConstraints />
+         <ColumnConstraints />
+      </columnConstraints>
+      <rowConstraints>
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+      </rowConstraints>
     </GridPane>
 
-    <Label fx:id="priceHintLabel"/>
+    <Label fx:id="priceHintLabel" />
 
-    <HBox spacing="10" alignment="CENTER_RIGHT">
-        <Button text="Продать" onAction="#handleSell" defaultButton="true"/>
-        <Button text="Отмена" onAction="#handleCancel"/>
+    <HBox alignment="CENTER_RIGHT" spacing="10">
+        <Button defaultButton="true" onAction="#handleSell" text="Продать" />
+        <Button onAction="#handleCancel" text="Отмена" />
     </HBox>
 
 </VBox>

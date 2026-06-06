@@ -2,19 +2,28 @@ package group.lab6.lab6.controller;
 
 import group.lab6.lab6.dao.DatabaseConnection;
 import group.lab6.lab6.dao.impl.*;
+import group.lab6.lab6.model.Instance;
+import group.lab6.lab6.model.PaymentMethod;
 import group.lab6.lab6.service.*;
+import group.lab6.lab6.service.exceptions.InstanceNotAvailableException;
+import group.lab6.lab6.service.exceptions.ValidationException;
 import group.lab6.lab6.service.impl.*;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 public class MainController {
 
@@ -26,6 +35,42 @@ public class MainController {
 
     @FXML
     private Label userLabel;
+
+    @FXML
+    private ComboBox<PaymentMethod> paymentMethodComboBox;
+
+    @FXML
+    private TableView<Instance> availableTable;
+
+    @FXML
+    private TableView<Instance> resultTable;
+
+    @FXML
+    private TableColumn<Instance, String> artistColumn;
+
+    @FXML
+    private TableColumn<Instance, String> albumColumn;
+
+    @FXML
+    private TableColumn<Instance, String> genreColumn;
+
+    @FXML
+    private TableColumn<Instance, String> conditionColumn;
+
+    @FXML
+    private TableColumn<Instance, String> priceColumn;
+
+    @FXML
+    private TableColumn<Instance, String> locationColumn;
+
+    @FXML
+    private TableColumn<Instance, String> formatColumn;
+
+    @FXML
+    private TableColumn<Instance, String> speedColumn;
+
+//    private ObservableList<Instance> availableInstances = FXCollections.observableArrayList();
+    private ObservableList<Instance> instanceList = FXCollections.observableArrayList();
 
     private VinylService vinylService;
     private CatalogService catalogService;
@@ -55,6 +100,110 @@ public class MainController {
         if (currentUser != null) {
             userLabel.setText("Пользователь: " + currentUser);
         }
+
+        paymentMethodComboBox.getItems().setAll(PaymentMethod.values());
+        paymentMethodComboBox.setValue(PaymentMethod.CASH);
+
+        artistColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getRelease().getArtist()));
+        albumColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getRelease().getAlbumTitle()));
+        genreColumn.setCellValueFactory(cellData -> {
+            if (cellData.getValue().getRelease().getGenre() != null) {
+                return new SimpleStringProperty(cellData.getValue().getRelease().getGenre().getGenreName());
+            }
+            return new SimpleStringProperty("");
+        });
+        conditionColumn.setCellValueFactory(cellData -> {
+            if (cellData.getValue().isUsed() && cellData.getValue().getUsedDetails() != null) {
+                return new SimpleStringProperty(cellData.getValue().getUsedDetails().getVinylCondition().getRusName());
+            }
+            return new SimpleStringProperty("Новый");
+        });
+        priceColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(String.format("%.2f ₽", cellData.getValue().getPrice())));
+        locationColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getFullLocation()));
+        formatColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getFormat().getDisplayName()));
+        speedColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getSpeed().getDisplayName()));
+
+
+        resultTable.setItems(instanceList);
+//        availableTable.setItems(availableInstances);
+        handleRefreshAvailable();
+    }
+
+    @FXML
+    private void handleSellFromMain() {
+//        Instance selected = availableTable.getSelectionModel().getSelectedItem();
+        Instance selected = resultTable.getSelectionModel().getSelectedItem();
+
+        if (selected == null) {
+            showAlert(Alert.AlertType.ERROR, "Ошибка", "Выберите пластинку в таблице для продажи");
+            return;
+        }
+
+        PaymentMethod paymentMethod = paymentMethodComboBox.getValue();
+        if (paymentMethod == null) {
+            showAlert(Alert.AlertType.ERROR, "Ошибка", "Выберите способ оплаты");
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Подтверждение продажи");
+        confirm.setHeaderText("Вы уверены, что хотите продать эту пластинку?");
+        confirm.setContentText(
+                String.format("Исполнитель: %s\nАльбом: %s\nЦена: %.2f ₽\nСпособ оплаты: %s",
+                        selected.getRelease().getArtist(),
+                        selected.getRelease().getAlbumTitle(),
+                        selected.getPrice(),
+                        paymentMethod.getRusName()
+                )
+        );
+
+        ButtonType result = confirm.showAndWait().orElse(ButtonType.CANCEL);
+        if (result != ButtonType.OK) {
+            return;
+        }
+
+        String checkNumber = "CHK-" + System.currentTimeMillis();
+
+        try {
+            vinylService.sellInstance(
+                    selected.getInstanceId().intValue(),
+                    checkNumber,
+                    paymentMethod.toDbValue(),
+                    selected.getPrice()
+            );
+
+            Alert success = new Alert(Alert.AlertType.INFORMATION);
+            success.setTitle("Успешно");
+            success.setHeaderText(null);
+            success.setContentText("Пластинка продана!\nНомер чека: " + checkNumber);
+            success.showAndWait();
+
+            handleRefreshAvailable();
+
+        } catch (ValidationException e) {
+            showAlert(Alert.AlertType.ERROR, "Ошибка валидации", e.getMessage());
+        } catch (InstanceNotAvailableException e) {
+            showAlert(Alert.AlertType.ERROR, "Ошибка", e.getMessage());
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Ошибка", "Не удалось продать пластинку: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleRefreshAvailable() {
+        try {
+            List<Instance> results = vinylService.searchInstances(null, null, null, null);
+            instanceList.clear();
+            instanceList.addAll(results);
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Ошибка", "Не удалось загрузить список: " + e.getMessage());
+        }
     }
 
     @FXML
@@ -65,7 +214,26 @@ public class MainController {
 
     @FXML
     private void handleAddNewInstance() {
-        openWindow("/group/lab6/lab6/view/AddNewInstanceView.fxml", "Добавление новой пластинки");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/group/lab6/lab6/view/AddNewInstanceView.fxml"));
+            Parent root = loader.load();
+
+            AddNewInstanceController controller = loader.getController();
+            controller.setVinylService(vinylService);
+            controller.setCatalogService(catalogService);
+            controller.setReferenceService(referenceService);
+
+            Stage stage = new Stage();
+            stage.setTitle("Добавление новой пластинки");
+            stage.setScene(new Scene(root, 600, 800));
+            stage.initOwner((Stage) mainRoot.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Ошибка", "Не удалось открыть окно");
+        }
     }
 
     @FXML
@@ -73,10 +241,10 @@ public class MainController {
         openWindow("/group/lab6/lab6/view/AddUsedInstanceView.fxml", "Добавление Б/У пластинки");
     }
 
-    @FXML
-    private void handleSell() {
-        handleSearch();
-    }
+//    @FXML
+//    private void handleSell() {
+//        handleSearch();
+//    }
 
     @FXML
     private void handleManageSuppliers() {
@@ -141,7 +309,13 @@ public class MainController {
             return;
         }
 
-        openSearchWithText(searchText);
+        try {
+            List<Instance> results = vinylService.searchInstances(searchText, null, null, null);
+            instanceList.clear();
+            instanceList.addAll(results);
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Ошибка", "Не удалось выполнить поиск: " + e.getMessage());
+        }
     }
 
     @FXML
@@ -149,13 +323,12 @@ public class MainController {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("О программе");
         alert.setHeaderText("АРМ Менеджера Винилового Магазина");
-        alert.setContentText("Разработано для учёта виниловых пластинок");
+        alert.setContentText("Учёт виниловых пластинок");
         alert.showAndWait();
     }
 
     @FXML
     private void handleChangeLanguage() {
-        // TODO: реализовать переключение языка
         showAlert(Alert.AlertType.INFORMATION, "Язык", "Функция будет добавлена позже");
     }
 
@@ -186,32 +359,32 @@ public class MainController {
         }
     }
 
-    private void openSearchWithText(String searchText) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/group/lab6/lab6/view/SearchView.fxml"));
-            Parent root = loader.load();
-
-            SearchController controller = loader.getController();
-            controller.setVinylService(vinylService);
-            controller.setCatalogService(catalogService);
-            controller.setPhotoService(photoService);
-            controller.setReferenceService(referenceService);
-            controller.loadGenres();
-            controller.loadConditions();
-            controller.setSearchText(searchText);
-
-            Stage stage = new Stage();
-            stage.setTitle("Поиск пластинок");
-            stage.setScene(new Scene(root, 900, 550));
-            stage.initOwner((Stage) mainRoot.getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Ошибка", "Не удалось открыть окно поиска");
-        }
-    }
+//    private void openSearchWithText(String searchText) {
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/group/lab6/lab6/view/SearchView.fxml"));
+//            Parent root = loader.load();
+//
+//            SearchController controller = loader.getController();
+//            controller.setVinylService(vinylService);
+//            controller.setCatalogService(catalogService);
+//            controller.setPhotoService(photoService);
+//            controller.setReferenceService(referenceService);
+//            controller.loadGenres();
+//            controller.loadConditions();
+//            controller.setSearchText(searchText);
+//
+//            Stage stage = new Stage();
+//            stage.setTitle("Поиск пластинок");
+//            stage.setScene(new Scene(root, 900, 550));
+//            stage.initOwner((Stage) mainRoot.getScene().getWindow());
+//            stage.initModality(Modality.WINDOW_MODAL);
+//            stage.show();
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            showAlert(Alert.AlertType.ERROR, "Ошибка", "Не удалось открыть окно поиска");
+//        }
+//    }
 
     private void showAlert(Alert.AlertType type, String title, String message) {
         Alert alert = new Alert(type);

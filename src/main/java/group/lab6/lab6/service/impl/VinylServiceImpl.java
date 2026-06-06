@@ -3,13 +3,16 @@ package group.lab6.lab6.service.impl;
 import group.lab6.lab6.dao.InstanceDAO;
 import group.lab6.lab6.dao.ReleaseDAO;
 import group.lab6.lab6.dao.PhotoDAO;
+import group.lab6.lab6.model.Genre;
 import group.lab6.lab6.model.Instance;
+import group.lab6.lab6.model.Release;
 import group.lab6.lab6.service.VinylService;
 import group.lab6.lab6.service.exceptions.ValidationException;
 import group.lab6.lab6.service.exceptions.InstanceNotAvailableException;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public class VinylServiceImpl implements VinylService {
 
@@ -21,6 +24,36 @@ public class VinylServiceImpl implements VinylService {
         this.instanceDAO = instanceDAO;
         this.releaseDAO = releaseDAO;
         this.photoDAO = photoDAO;
+    }
+
+    @Override
+    public Integer addNewInstanceWithRelease(String catalogNumber, String artist, String albumTitle,
+                                             Integer genreId, BigDecimal price, String format, String speed,
+                                             Integer supplierId, String locationShelf, String locationSection,
+                                             String locationBox, String label, String country,
+                                             Integer releaseYear, String description) {
+
+        Integer releaseId = releaseDAO.addOrGet(catalogNumber, artist, albumTitle, genreId,
+                label, country, releaseYear, description);
+
+        return instanceDAO.addNewFromSupplier(catalogNumber, price, format, speed,
+                supplierId, locationShelf, locationSection, locationBox);
+    }
+
+    @Override
+    public Integer addNewInstanceToExistingRelease(Integer releaseId, BigDecimal price, String format,
+                                                   String speed, Integer supplierId, String locationShelf,
+                                                   String locationSection, String locationBox) {
+
+        Optional<Release> release = releaseDAO.findById(releaseId.longValue());
+        if (release.isEmpty()) {
+            throw new ValidationException("Релиз не найден");
+        }
+
+        String catalogNumber = release.get().getCatalogNumber();
+
+        return instanceDAO.addNewFromSupplier(catalogNumber, price, format, speed,
+                supplierId, locationShelf, locationSection, locationBox);
     }
 
     @Override
@@ -39,7 +72,7 @@ public class VinylServiceImpl implements VinylService {
             throw new ValidationException("Необходимо выбрать поставщика");
         }
 
-        Integer releaseId = releaseDAO.addOrGet(catalogNumber, artist, albumTitle, genreId);
+        Integer releaseId = releaseDAO.addOrGet(catalogNumber, artist, albumTitle, genreId, null, null, null, null);
 
         return instanceDAO.addNewFromSupplier(catalogNumber, price, format, speed,
                 supplierId, locationShelf, locationSection, locationBox);
@@ -65,7 +98,7 @@ public class VinylServiceImpl implements VinylService {
             throw new ValidationException("Фамилия продавца не может быть пустой");
         }
 
-        releaseDAO.addOrGet(catalogNumber, artist, albumTitle, genreId);
+        releaseDAO.addOrGet(catalogNumber, artist, albumTitle, genreId, null, null, null, null);
 
         return instanceDAO.addUsed(catalogNumber, price, format, speed,
                 vinylCondition, coverCondition, defectsNotes,

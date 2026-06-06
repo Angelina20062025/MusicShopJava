@@ -20,14 +20,14 @@ public class DatabaseConnection {
         return instance;
     }
 
-    public boolean testConnection() {
-        try {
-            Connection conn = getConnection();
-            return conn != null && !conn.isClosed();
-        } catch (SQLException e) {
-            return false;
-        }
-    }
+//    public boolean testConnection() {
+//        try {
+//            Connection conn = getConnection();
+//            return conn != null && !conn.isClosed();
+//        } catch (SQLException e) {
+//            return false;
+//        }
+//    }
 
     public static void setCredentials(String login, String pass) {
         user = login;

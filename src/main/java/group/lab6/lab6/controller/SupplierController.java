@@ -25,21 +25,7 @@ public class SupplierController {
 
     public void setReferenceService(ReferenceService referenceService) {
         this.referenceService = referenceService;
-    }
-
-    @FXML
-    public void initialize() {
-        idColumn.setCellValueFactory(cellData -> new SimpleLongProperty(cellData.getValue().getSupplierId()).asObject());
-        nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
-        contactColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getContactInfo()));
-
-        supplierTable.getSelectionModel().selectedItemProperty().addListener(
-                (obs, oldSelection, newSelection) -> {
-                    if (newSelection != null) {
-                        nameField.setText(newSelection.getName());
-                        contactField.setText(newSelection.getContactInfo());
-                    }
-                });
+        handleLoadSuppliers();
     }
 
     @FXML
@@ -57,6 +43,21 @@ public class SupplierController {
         } catch (Exception e) {
             showAlert("Ошибка", "Не удалось загрузить поставщиков: " + e.getMessage());
         }
+    }
+
+    @FXML
+    public void initialize() {
+        idColumn.setCellValueFactory(cellData -> new SimpleLongProperty(cellData.getValue().getSupplierId()).asObject());
+        nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
+        contactColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getContactInfo()));
+
+        supplierTable.getSelectionModel().selectedItemProperty().addListener(
+                (obs, oldSelection, newSelection) -> {
+                    if (newSelection != null) {
+                        nameField.setText(newSelection.getName());
+                        contactField.setText(newSelection.getContactInfo());
+                    }
+                });
     }
 
     @FXML

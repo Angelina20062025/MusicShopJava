@@ -28,6 +28,24 @@ public class ReleaseDAOImpl implements ReleaseDAO {
     }
 
     @Override
+    public Optional<Release> findById(Long id) {
+        String sql = "SELECT r.*, g.genre_id, g.genre_name FROM Release r " +
+                "LEFT JOIN Genre g ON r.genre_id = g.genre_id " +
+                "WHERE r.release_id = ? AND r.is_deleted = FALSE";
+        try (PreparedStatement stmt = dbConnection.getConnection().prepareStatement(sql)) {
+            stmt.setLong(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return Optional.of(mapper(rs));
+            }
+            return Optional.empty();
+        } catch (SQLException e) {
+            System.out.println("Ошибка при поиске релиза по ID: " + e.getMessage());
+            return Optional.empty();
+        }
+    }
+
+    @Override
     public Release update(Release release) {
         try (PreparedStatement stmt = dbConnection.getConnection().prepareStatement(UPDATE)) {
             stmt.setString(1, release.getArtist());
@@ -55,7 +73,8 @@ public class ReleaseDAOImpl implements ReleaseDAO {
     }
 
     @Override
-    public Integer addOrGet(String catalogNumber, String artist, String albumTitle, Integer genreId) {
+    public Integer addOrGet(String catalogNumber, String artist, String albumTitle, Integer genreId,
+                            String label, String country, Integer releaseYear, String description) {
         try (CallableStatement stmt = dbConnection.getConnection().prepareCall(ADD_OR_GET)) {
             stmt.registerOutParameter(1, Types.INTEGER);
             stmt.setString(2, catalogNumber);
@@ -66,10 +85,18 @@ public class ReleaseDAOImpl implements ReleaseDAO {
             } else {
                 stmt.setNull(5, Types.INTEGER);
             }
-            stmt.setNull(6, Types.VARCHAR);
-            stmt.setNull(7, Types.VARCHAR);
-            stmt.setNull(8, Types.INTEGER);
-            stmt.setNull(9, Types.VARCHAR);
+//            stmt.setNull(6, Types.VARCHAR);
+//            stmt.setNull(7, Types.VARCHAR);
+//            stmt.setNull(8, Types.INTEGER);
+//            stmt.setNull(9, Types.VARCHAR);
+            stmt.setString(6, label);
+            stmt.setString(7, country);
+            if (releaseYear != null) {
+                stmt.setInt(8, releaseYear);
+            } else {
+                stmt.setNull(8, Types.INTEGER);
+            }
+            stmt.setString(9, description);
             stmt.execute();
             return stmt.getInt(1);
         } catch (SQLException e) {

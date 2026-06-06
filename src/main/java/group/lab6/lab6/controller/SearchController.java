@@ -48,6 +48,7 @@ public class SearchController {
 
     public void setVinylService(VinylService vinylService) {
         this.vinylService = vinylService;
+        handleSearch();
     }
 
     public void setCatalogService(CatalogService catalogService) {
@@ -60,6 +61,7 @@ public class SearchController {
 
     public void setReferenceService(ReferenceService referenceService) {
         this.referenceService = referenceService;
+        handleSearch();
     }
 
     public void setOwnerStage(Stage ownerStage) {
@@ -157,7 +159,7 @@ public class SearchController {
 
             Stage stage = new Stage();
             stage.setTitle("Продажа пластинки");
-            stage.setScene(new Scene(root, 450, 350));
+            stage.setScene(new Scene(root, 750, 350));
             stage.initOwner((Stage) resultTable.getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
             stage.showAndWait();

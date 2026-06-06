@@ -32,7 +32,7 @@ public class CatalogServiceImpl implements CatalogService {
             throw new ValidationException("Название альбома не может быть пустым");
         }
 
-        return releaseDAO.addOrGet(catalogNumber, artist, albumTitle, genreId);
+        return releaseDAO.addOrGet(catalogNumber, artist, albumTitle, genreId, null, null, null, null);
     }
 
     @Override

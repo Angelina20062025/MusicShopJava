@@ -17,6 +17,16 @@ public interface VinylService {
                             String sellerFirstName, String sellerLastName, String sellerPhone,
                             String locationShelf, String locationSection, String locationBox);
 
+    Integer addNewInstanceWithRelease(String catalogNumber, String artist, String albumTitle,
+                                      Integer genreId, BigDecimal price, String format, String speed,
+                                      Integer supplierId, String locationShelf, String locationSection,
+                                      String locationBox, String label, String country,
+                                      Integer releaseYear, String description);
+
+    Integer addNewInstanceToExistingRelease(Integer releaseId, BigDecimal price, String format,
+                                            String speed, Integer supplierId, String locationShelf,
+                                            String locationSection, String locationBox);
+
     Integer sellInstance(Integer instanceId, String checkNumber, String paymentMethod, BigDecimal finalPrice);
 
     List<Instance> searchInstances(String artist, String albumTitle, String genreName, String vinylCondition);
