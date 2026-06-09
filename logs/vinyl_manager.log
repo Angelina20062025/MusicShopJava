@@ -1,9 +1,0 @@
-2026-06-09 15:15:00.677 [JavaFX Application Thread] INFO  group.lab6.lab6.MainApplication - Приложение запущено
-2026-06-09 15:15:22.141 [JavaFX Application Thread] INFO  g.l.l.service.impl.AuthServiceImpl - Попытка аутентификации пользователя: manager2026shop
-2026-06-09 15:15:22.343 [JavaFX Application Thread] ERROR g.l.l.service.impl.AuthServiceImpl - Ошибка аутентификации пользователя manager2026shop: �����: ������������ "manager2026shop" �� ������ �������� ����������� (�� ������)
-2026-06-09 15:15:40.628 [JavaFX Application Thread] INFO  g.l.l.service.impl.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
-2026-06-09 15:15:40.731 [JavaFX Application Thread] INFO  g.l.l.service.impl.AuthServiceImpl - Пользователь manager_user успешно аутентифицирован
-2026-06-09 15:16:38.187 [JavaFX Application Thread] INFO  g.l.lab6.controller.MainController - Пользователь выбрал пластинку для продажи: ID=25
-2026-06-09 15:16:39.676 [JavaFX Application Thread] INFO  g.l.l.service.impl.VinylServiceImpl - Продажа экземпляра 25 по чеку CHK-1781007399676
-2026-06-09 15:16:39.687 [JavaFX Application Thread] INFO  g.l.l.service.impl.VinylServiceImpl - Продажа успешно завершена, saleId=14
-2026-06-09 15:17:06.367 [JavaFX Application Thread] INFO  group.lab6.lab6.MainApplication - Приложение остановлено
