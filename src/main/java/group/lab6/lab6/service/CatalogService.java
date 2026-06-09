@@ -5,6 +5,10 @@ import group.lab6.lab6.model.Genre;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Содержит бизнес-логику работы с каталогом релизов (справочная информация о пластинках).
+ * Использует ReleaseDAO и InstanceDAO для доступа к данным.
+ */
 public interface CatalogService {
 
     Integer addOrGetRelease(String catalogNumber, String artist, String albumTitle, Integer genreId);

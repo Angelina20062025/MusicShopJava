@@ -7,15 +7,17 @@ import group.lab6.lab6.model.Genre;
 import group.lab6.lab6.model.Instance;
 import group.lab6.lab6.model.Release;
 import group.lab6.lab6.service.VinylService;
+import group.lab6.lab6.service.exceptions.BusinessException;
 import group.lab6.lab6.service.exceptions.ValidationException;
 import group.lab6.lab6.service.exceptions.InstanceNotAvailableException;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 public class VinylServiceImpl implements VinylService {
-
+    private static final Logger logger = LoggerFactory.getLogger(VinylServiceImpl.class);
     private final InstanceDAO instanceDAO;
     private final ReleaseDAO releaseDAO;
     private final PhotoDAO photoDAO;
@@ -118,13 +120,13 @@ public class VinylServiceImpl implements VinylService {
         if (paymentMethod == null || paymentMethod.trim().isEmpty()) {
             throw new ValidationException("Не выбран способ оплаты");
         }
-
+        logger.info("Продажа экземпляра {} по чеку {}", instanceId, checkNumber);
         Integer saleId = instanceDAO.sell(instanceId, checkNumber, paymentMethod, finalPrice);
 
         if (saleId == null) {
             throw new InstanceNotAvailableException("Экземпляр не найден или уже продан");
         }
-
+        logger.info("Продажа успешно завершена, saleId={}", saleId);
         return saleId;
     }
 
@@ -149,6 +151,9 @@ public class VinylServiceImpl implements VinylService {
         if (instanceId == null) {
             throw new ValidationException("ID экземпляра не может быть пустым");
         }
-        instanceDAO.archive(instanceId);
+        boolean archived = instanceDAO.archive(instanceId);
+        if (!archived) {
+            throw new BusinessException("Не удалось заархивировать пластинку");
+        }
     }
 }

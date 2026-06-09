@@ -7,6 +7,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Предоставляет методы для работы с экземплярами виниловых пластинок в базе данных.
+ */
 public interface InstanceDAO {
     Instance update(Instance instance);
 

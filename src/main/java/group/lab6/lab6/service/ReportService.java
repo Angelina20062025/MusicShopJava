@@ -5,6 +5,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Содержит бизнес-логику формирования отчётов.
+ * Использует SaleDAO для получения данных из БД.
+ */
 public interface ReportService {
 
     List<Map<String, Object>> getSoldReport(LocalDate startDate, LocalDate endDate);

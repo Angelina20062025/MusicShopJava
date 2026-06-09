@@ -2,6 +2,7 @@ package group.lab6.lab6.controller;
 
 import group.lab6.lab6.dao.DatabaseConnection;
 import group.lab6.lab6.dao.impl.*;
+import group.lab6.lab6.model.Genre;
 import group.lab6.lab6.model.Instance;
 import group.lab6.lab6.model.PaymentMethod;
 import group.lab6.lab6.service.*;
@@ -16,6 +17,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -61,6 +64,12 @@ public class MainController {
     private TableColumn<Instance, String> priceColumn;
 
     @FXML
+    private ComboBox<Genre> genreFilterComboBox;
+
+    @FXML
+    private ComboBox<String> conditionFilterComboBox;
+
+    @FXML
     private TableColumn<Instance, String> locationColumn;
 
     @FXML
@@ -69,9 +78,8 @@ public class MainController {
     @FXML
     private TableColumn<Instance, String> speedColumn;
 
-//    private ObservableList<Instance> availableInstances = FXCollections.observableArrayList();
     private ObservableList<Instance> instanceList = FXCollections.observableArrayList();
-
+    private static final Logger logger = LoggerFactory.getLogger(MainController.class);
     private VinylService vinylService;
     private CatalogService catalogService;
     private ReferenceService referenceService;
@@ -89,10 +97,11 @@ public class MainController {
         SaleDAOImpl saleDAO = new SaleDAOImpl(dbConnection);
         PhotoDAOImpl photoDAO = new PhotoDAOImpl(dbConnection);
         DefectPhotoDAOImpl defectPhotoDAO = new DefectPhotoDAOImpl(dbConnection);
+        SellerPersonDAOImpl sellerPersonDAO = new SellerPersonDAOImpl(dbConnection);
 
+        this.referenceService = new ReferenceServiceImpl(supplierDAO, sellerPersonDAO);
         this.vinylService = new VinylServiceImpl(instanceDAO, releaseDAO, photoDAO);
         this.catalogService = new CatalogServiceImpl(releaseDAO, instanceDAO);
-        this.referenceService = new ReferenceServiceImpl(supplierDAO);
         this.reportService = new ReportServiceImpl(saleDAO);
         this.photoService = new PhotoServiceImpl(photoDAO, defectPhotoDAO);
 
@@ -131,15 +140,110 @@ public class MainController {
 
 
         resultTable.setItems(instanceList);
-//        availableTable.setItems(availableInstances);
         handleRefreshAvailable();
+
+        if (catalogService != null) {
+            genreFilterComboBox.getItems().addAll(catalogService.getAllGenres());
+        }
+        conditionFilterComboBox.getItems().addAll("Идеальное", "Почти идеальное", "Очень хорошее", "Хорошее", "Удовлетворительное", "Плохое");
+        conditionFilterComboBox.setValue(null);
+    }
+
+    @FXML
+    private void handleEditInstance() {
+        Instance selected = resultTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert(Alert.AlertType.WARNING, "Ошибка", "Выберите пластинку в таблице");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/group/lab6/lab6/view/EditInstanceView.fxml"));
+            Parent root = loader.load();
+
+            EditInstanceController controller = loader.getController();
+            controller.setVinylService(vinylService);
+            controller.setInstance(selected);
+
+            Stage stage = new Stage();
+            stage.setTitle("Редактирование экземпляра");
+            stage.setScene(new Scene(root, 500, 450));
+            stage.initOwner((Stage) mainRoot.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.showAndWait();
+
+            handleRefreshAvailable();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Ошибка", "Не удалось открыть окно редактирования");
+        }
+    }
+
+    @FXML
+    private void handleResetFilters() {
+        quickSearchField.clear();
+        genreFilterComboBox.setValue(null);
+        conditionFilterComboBox.setValue(null);
+        instanceList.clear();
+    }
+
+    @FXML
+    private void handleManageSellers() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/group/lab6/lab6/view/SellerPersonView.fxml"));
+            Parent root = loader.load();
+
+            SellerPersonController controller = loader.getController();
+            controller.setReferenceService(referenceService);
+
+            Stage stage = new Stage();
+            stage.setTitle("Управление продавцами");
+            stage.setScene(new Scene(root, 800, 600));
+            stage.initOwner((Stage) mainRoot.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Ошибка", "Не удалось открыть окно управления продавцами");
+        }
+    }
+
+    @FXML
+    private void handleArchive() {
+        Instance selected = resultTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert(Alert.AlertType.WARNING, "Ошибка", "Выберите пластинку в таблице");
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Подтверждение");
+        confirm.setHeaderText(null);
+        confirm.setContentText("Заархивировать пластинку?");
+
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                try {
+                    vinylService.archiveInstance(selected.getInstanceId().intValue());
+                    showAlert(Alert.AlertType.INFORMATION, "Успех", "Пластинка заархивирована");
+                    handleRefreshAvailable();
+                } catch (Exception e) {
+                    showAlert(Alert.AlertType.ERROR, "Ошибка", "Не удалось заархивировать: " + e.getMessage());
+                }
+            }
+        });
     }
 
     @FXML
     private void handleSellFromMain() {
-//        Instance selected = availableTable.getSelectionModel().getSelectedItem();
         Instance selected = resultTable.getSelectionModel().getSelectedItem();
-
+        if (selected == null) {
+            showAlert(Alert.AlertType.ERROR, "Ошибка", "Выберите пластинку в таблице");
+            return;
+        }
+        logger.info("Пользователь выбрал пластинку для продажи: ID={}", selected.getInstanceId());
         if (selected == null) {
             showAlert(Alert.AlertType.ERROR, "Ошибка", "Выберите пластинку в таблице для продажи");
             return;
@@ -230,6 +334,8 @@ public class MainController {
             stage.initModality(Modality.WINDOW_MODAL);
             stage.showAndWait();
 
+            handleRefreshAvailable();
+
         } catch (IOException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Ошибка", "Не удалось открыть окно");
@@ -238,13 +344,29 @@ public class MainController {
 
     @FXML
     private void handleAddUsedInstance() {
-        openWindow("/group/lab6/lab6/view/AddUsedInstanceView.fxml", "Добавление Б/У пластинки");
-    }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/group/lab6/lab6/view/AddUsedInstanceView.fxml"));
+            Parent root = loader.load();
 
-//    @FXML
-//    private void handleSell() {
-//        handleSearch();
-//    }
+            AddUsedInstanceController controller = loader.getController();
+            controller.setVinylService(vinylService);
+            controller.setCatalogService(catalogService);
+            controller.setReferenceService(referenceService);
+
+            Stage stage = new Stage();
+            stage.setTitle("Добавление Б/У пластинки");
+            stage.setScene(new Scene(root, 600, 800));
+            stage.initOwner((Stage) mainRoot.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.showAndWait();
+
+            handleRefreshAvailable();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Ошибка", "Не удалось открыть окно добавления Б/У пластинки");
+        }
+    }
 
     @FXML
     private void handleManageSuppliers() {
@@ -269,54 +391,144 @@ public class MainController {
         }
     }
 
+//    @FXML
+//    private void handleSearch() {
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/group/lab6/lab6/view/SearchView.fxml"));
+//            Parent root = loader.load();
+//
+//            SearchController searchController = loader.getController();
+//            searchController.setVinylService(vinylService);
+//            searchController.setCatalogService(catalogService);
+//            searchController.setPhotoService(photoService);
+//            searchController.setReferenceService(referenceService);
+//            searchController.loadGenres();
+//            searchController.loadConditions();
+//
+//            Stage stage = new Stage();
+//            stage.setTitle("Поиск пластинок");
+//            stage.setScene(new Scene(root, 900, 550));
+//            stage.initOwner((Stage) mainRoot.getScene().getWindow());
+//            stage.initModality(Modality.WINDOW_MODAL);
+//            stage.show();
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            showAlert(Alert.AlertType.ERROR, "Ошибка", "Не удалось открыть окно поиска");
+//        }
+//    }
+
     @FXML
-    private void handleSearch() {
+    private void handleReports() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/group/lab6/lab6/view/SearchView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/group/lab6/lab6/view/ReportView.fxml"));
             Parent root = loader.load();
 
-            SearchController searchController = loader.getController();
-            searchController.setVinylService(vinylService);
-            searchController.setCatalogService(catalogService);
-            searchController.setPhotoService(photoService);
-            searchController.setReferenceService(referenceService);
-            searchController.loadGenres();
-            searchController.loadConditions();
+            ReportController controller = loader.getController();
+            controller.setReportService(reportService);
 
             Stage stage = new Stage();
-            stage.setTitle("Поиск пластинок");
-            stage.setScene(new Scene(root, 900, 550));
+            stage.setTitle("Отчёты");
+            stage.setScene(new Scene(root, 900, 600));
             stage.initOwner((Stage) mainRoot.getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.show();
+            stage.showAndWait();
 
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Ошибка", "Не удалось открыть окно поиска");
+            showAlert(Alert.AlertType.ERROR, "Ошибка", "Не удалось открыть окно отчётов");
         }
     }
 
     @FXML
-    private void handleReports() {
-        openWindow("/group/lab6/lab6/view/ReportView.fxml", "Отчёты");
+    private void handleManagePhotos() {
+        Instance selected = resultTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert(Alert.AlertType.WARNING, "Ошибка", "Выберите пластинку в таблице");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/group/lab6/lab6/view/PhotoManagerView.fxml"));
+            Parent root = loader.load();
+
+            PhotoManagerController controller = loader.getController();
+            controller.setPhotoService(photoService);
+            controller.setVinylService(vinylService);
+            controller.setInstance(selected);
+
+            Stage stage = new Stage();
+            stage.setTitle("Фото " + selected.getRelease().getArtist() + " - " + selected.getRelease().getAlbumTitle());
+            stage.setScene(new Scene(root, 600, 550));
+            stage.initOwner((Stage) mainRoot.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.showAndWait();
+
+            handleRefreshAvailable();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Ошибка", "Не удалось открыть окно управления фото");
+        }
     }
 
     @FXML
     private void handleQuickSearch() {
         String searchText = quickSearchField.getText();
-        if (searchText == null || searchText.trim().isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Предупреждение", "Введите текст для поиска");
-            return;
-        }
+        logger.info("Поиск пластинок по запросу: {}", searchText);
+//        if (searchText == null || searchText.trim().isEmpty()) {
+//            showAlert(Alert.AlertType.WARNING, "Предупреждение", "Введите текст для поиска");
+//            return;
+//        }
 
         try {
-            List<Instance> results = vinylService.searchInstances(searchText, null, null, null);
+            String genreName = genreFilterComboBox.getValue() != null ? genreFilterComboBox.getValue().getGenreName() : null;
+
+            String condition = conditionFilterComboBox.getValue();
+            String dbCondition = null;
+            if (condition != null) {
+                switch (condition) {
+                    case "Идеальное": dbCondition = "mint"; break;
+                    case "Почти идеальное": dbCondition = "near_mint"; break;
+                    case "Очень хорошее": dbCondition = "very_good"; break;
+                    case "Хорошее": dbCondition = "good"; break;
+                    case "Удовлетворительное": dbCondition = "fair"; break;
+                    case "Плохое": dbCondition = "poor"; break;
+                }
+            }
+
+            List<Instance> results = vinylService.searchInstances(searchText, null, genreName, dbCondition);
             instanceList.clear();
             instanceList.addAll(results);
+
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Ошибка", "Не удалось выполнить поиск: " + e.getMessage());
         }
     }
+
+//    @FXML
+//    private void handleQuickSearch() {
+//        String searchText = quickSearchField.getText();
+//        if (searchText == null || searchText.trim().isEmpty()) {
+//            showAlert(Alert.AlertType.WARNING, "Предупреждение", "Введите текст для поиска");
+//            return;
+//        }
+//
+//        try {
+//            String genreName = genreFilterComboBox.getValue() != null ? genreFilterComboBox.getValue().getGenreName() : null;
+//            String condition = conditionFilterComboBox.getValue();
+//            String dbCondition = mapConditionToDb(condition);
+//            if (condition != null && condition.equals("Новый")) {
+//                condition = null;
+//            }
+//
+//            List<Instance> results = vinylService.searchInstances(searchText, null, genreName, condition);
+//            instanceList.clear();
+//            instanceList.addAll(results);
+//        } catch (Exception e) {
+//            showAlert(Alert.AlertType.ERROR, "Ошибка", "Не удалось выполнить поиск: " + e.getMessage());
+//        }
+//    }
 
     @FXML
     private void handleAbout() {
@@ -358,33 +570,6 @@ public class MainController {
             showAlert(Alert.AlertType.ERROR, "Ошибка", "Не удалось открыть окно: " + e.getMessage());
         }
     }
-
-//    private void openSearchWithText(String searchText) {
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/group/lab6/lab6/view/SearchView.fxml"));
-//            Parent root = loader.load();
-//
-//            SearchController controller = loader.getController();
-//            controller.setVinylService(vinylService);
-//            controller.setCatalogService(catalogService);
-//            controller.setPhotoService(photoService);
-//            controller.setReferenceService(referenceService);
-//            controller.loadGenres();
-//            controller.loadConditions();
-//            controller.setSearchText(searchText);
-//
-//            Stage stage = new Stage();
-//            stage.setTitle("Поиск пластинок");
-//            stage.setScene(new Scene(root, 900, 550));
-//            stage.initOwner((Stage) mainRoot.getScene().getWindow());
-//            stage.initModality(Modality.WINDOW_MODAL);
-//            stage.show();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            showAlert(Alert.AlertType.ERROR, "Ошибка", "Не удалось открыть окно поиска");
-//        }
-//    }
 
     private void showAlert(Alert.AlertType type, String title, String message) {
         Alert alert = new Alert(type);

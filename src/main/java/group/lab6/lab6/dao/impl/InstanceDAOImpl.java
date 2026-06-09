@@ -20,11 +20,13 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.Optional;
 
 public class InstanceDAOImpl implements InstanceDAO {
-
-    private static final String UPDATE = "UPDATE Instance SET price = ?, location_shelf = ?, location_section = ?, location_box = ?, status = ?, format = ?, speed = ?, updated_at = CURRENT_TIMESTAMP WHERE instance_id = ? AND is_deleted = FALSE";
+    private static final Logger logger = LoggerFactory.getLogger(InstanceDAOImpl.class);
+    private static final String UPDATE = "UPDATE Instance SET price = ?, location_shelf = ?, location_section = ?, location_box = ?, status = ?::instance_status, format = ?::format_type, speed = ?::speed_type, updated_at = CURRENT_TIMESTAMP WHERE instance_id = ? AND is_deleted = FALSE";
     private static final String ADD_NEW_FROM_SUPPLIER = "{? = call add_new_instance_from_supplier(?, ?, ?, ?, ?, ?, ?, ?)}";
     private static final String ADD_USED = "{? = call add_used_instance(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
     private static final String SELL = "{? = call sell_instance(?, ?, ?, ?)}";
@@ -62,6 +64,7 @@ public class InstanceDAOImpl implements InstanceDAO {
     public Integer addNewFromSupplier(String catalogNumber, BigDecimal price, String format,
                                       String speed, Integer supplierId, String locationShelf,
                                       String locationSection, String locationBox) {
+        logger.debug("Вызов add_new_instance_from_supplier для каталога {}", catalogNumber);
         try (CallableStatement stmt = dbConnection.getConnection().prepareCall(ADD_NEW_FROM_SUPPLIER)) {
             stmt.registerOutParameter(1, Types.INTEGER);
             stmt.setString(2, catalogNumber);
@@ -177,10 +180,25 @@ public class InstanceDAOImpl implements InstanceDAO {
                 }
                 instance.setRelease(release);
 
-                if (rs.getObject("vinyl_condition") != null) {
+//                if (rs.getObject("vinyl_condition") != null) {
+//                    UsedDetails ud = new UsedDetails();
+//                    ud.setVinylCondition(ConditionGrade.fromDbValue(rs.getString("vinyl_condition")));
+//                    ud.setCoverCondition(ConditionGrade.fromDbValue(rs.getString("cover_condition")));
+//                    instance.setUsedDetails(ud);
+//                }
+
+                if (rs.getObject("vinyl_condition") != null || rs.getObject("cover_condition") != null) {
                     UsedDetails ud = new UsedDetails();
-                    ud.setVinylCondition(ConditionGrade.fromDbValue(rs.getString("vinyl_condition")));
-                    ud.setCoverCondition(ConditionGrade.fromDbValue(rs.getString("cover_condition")));
+                    if (rs.getObject("vinyl_condition") != null) {
+                        ud.setVinylCondition(ConditionGrade.fromDbValue(rs.getString("vinyl_condition")));
+                    }
+                    if (rs.getObject("cover_condition") != null) {
+                        ud.setCoverCondition(ConditionGrade.fromDbValue(rs.getString("cover_condition")));
+                    }
+                    ud.setDefectsNotes(rs.getString("defects_notes"));
+                    if (rs.getObject("used_details_id") != null) {
+                        ud.setUsedDetailsId(rs.getLong("used_details_id"));
+                    }
                     instance.setUsedDetails(ud);
                 }
 

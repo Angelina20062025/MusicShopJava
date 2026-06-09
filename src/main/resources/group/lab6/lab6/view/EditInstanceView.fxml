@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="15" alignment="TOP_CENTER" xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="group.lab6.lab6.controller.EditInstanceController">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Редактирование экземпляра"/>
+
+    <Label fx:id="instanceInfoLabel" wrapText="true"/>
+
+    <GridPane hgap="10" vgap="10">
+        <Label text="Цена:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="priceField" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="200"/>
+
+        <Label text="Стеллаж:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="shelfField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Секция:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="sectionField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Коробка:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TextField fx:id="boxField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <Label text="Формат:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="formatComboBox" GridPane.rowIndex="4" GridPane.columnIndex="1" prefWidth="200"/>
+
+        <Label text="Скорость:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="speedComboBox" GridPane.rowIndex="5" GridPane.columnIndex="1" prefWidth="200"/>
+    </GridPane>
+
+    <Label fx:id="statusLabel"/>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Сохранить" onAction="#handleSave" defaultButton="true"/>
+        <Button text="Отмена" onAction="#handleCancel"/>
+    </HBox>
+
+</VBox>

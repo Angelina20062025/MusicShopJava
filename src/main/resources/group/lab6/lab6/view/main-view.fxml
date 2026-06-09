@@ -21,13 +21,16 @@
     <top>
         <VBox>
             <MenuBar>
-                <Menu text="Файл">
+                <Menu text="Выйти">
                     <MenuItem text="Выход" onAction="#handleExit"/>
                 </Menu>
                 <Menu text="Операции">
                     <MenuItem text="Добавить новую пластинку" onAction="#handleAddNewInstance"/>
                     <MenuItem text="Добавить Б/У пластинку" onAction="#handleAddUsedInstance"/>
+                    <MenuItem text="Редактировать экземпляр" onAction="#handleEditInstance"/>
+                    <MenuItem text="Управление фото" onAction="#handleManagePhotos"/>
                     <MenuItem text="Управление поставщиками" onAction="#handleManageSuppliers"/>
+                    <MenuItem text="Управление продавцами" onAction="#handleManageSellers"/>
                     <SeparatorMenuItem/>
                     <MenuItem text="Отчёты" onAction="#handleReports"/>
                 </Menu>
@@ -38,7 +41,12 @@
             <HBox alignment="CENTER" spacing="10">
                 <Label text="Поиск:"/>
                 <TextField fx:id="quickSearchField" promptText="Исполнитель или название"/>
+                <Label text="Жанр:"/>
+                <ComboBox fx:id="genreFilterComboBox" prefWidth="150"/>
+                <Label text="Состояние:"/>
+                <ComboBox fx:id="conditionFilterComboBox" prefWidth="150"/>
                 <Button text="Найти" onAction="#handleQuickSearch" defaultButton="true"/>
+                <Button text="Сбросить" onAction="#handleResetFilters"/>
             </HBox>
         </VBox>
     </top>
@@ -55,7 +63,8 @@
             </GridPane>
 
             <HBox spacing="10" alignment="CENTER">
-                <Button text="Продать выбранную пластинку" onAction="#handleSellFromMain" defaultButton="true"/>
+                <Button text="Продать" onAction="#handleSellFromMain" defaultButton="true"/>
+                <Button text="Архивировать" onAction="#handleArchive"/>
             </HBox>
 
             <Label text="Доступные пластинки"/>
@@ -82,7 +91,7 @@
     </center>
 
     <bottom>
-        <HBox alignment="CENTER_RIGHT">
+        <HBox alignment="CENTER_RIGHT" spacing="10">
             <Label fx:id="userLabel" text="Пользователь: "/>
             <Button text="Сменить язык" onAction="#handleChangeLanguage"/>
         </HBox>

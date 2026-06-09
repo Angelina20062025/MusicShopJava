@@ -4,6 +4,11 @@ import group.lab6.lab6.model.Instance;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * Содержит основную бизнес-логику работы с виниловыми пластинками.
+ * Объединяет операции с релизами, экземплярами, продажами.
+ * Использует DAO для доступа к данным.
+ */
 public interface VinylService {
 
     Integer addNewInstance(String catalogNumber, String artist, String albumTitle,

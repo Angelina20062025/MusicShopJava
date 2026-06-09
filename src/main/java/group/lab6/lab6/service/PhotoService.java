@@ -4,6 +4,10 @@ import group.lab6.lab6.model.Photo;
 import group.lab6.lab6.model.DefectPhoto;
 import java.util.List;
 
+/**
+ * Содержит бизнес-логику работы с фотографиями (обычными и дефектов).
+ * Фотографии физически хранятся в папке пользователя, а в БД сохраняется путь.
+ */
 public interface PhotoService {
 
     List<Photo> getPhotosByInstanceId(Integer instanceId);

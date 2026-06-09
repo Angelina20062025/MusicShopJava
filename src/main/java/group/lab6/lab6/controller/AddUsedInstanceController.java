@@ -1,78 +1,47 @@
 package group.lab6.lab6.controller;
 
-import group.lab6.lab6.model.FormatType;
-import group.lab6.lab6.model.Genre;
-import group.lab6.lab6.model.SpeedType;
-import group.lab6.lab6.model.Supplier;
-import group.lab6.lab6.model.Release;
+import group.lab6.lab6.model.*;
 import group.lab6.lab6.service.CatalogService;
 import group.lab6.lab6.service.ReferenceService;
 import group.lab6.lab6.service.VinylService;
 import group.lab6.lab6.service.exceptions.ValidationException;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 
-public class AddNewInstanceController {
+public class AddUsedInstanceController {
 
-    @FXML
-    private TextField catalogNumberField;
-
-    @FXML
-    private TextField artistField;
-
-    @FXML
-    private TextField albumField;
-
-    @FXML
-    private ComboBox<Genre> genreComboBox;
-
-    @FXML
-    private TextField labelField;
-
-    @FXML
-    private TextField countryField;
-
-    @FXML
-    private TextField yearField;
-
-    @FXML
-    private TextField descriptionField;
-
-    @FXML
-    private TextField priceField;
-
-    @FXML
-    private ComboBox<FormatType> formatComboBox;
-
-    @FXML
-    private ComboBox<SpeedType> speedComboBox;
-
-    @FXML
-    private ComboBox<Supplier> supplierComboBox;
-
-    @FXML
-    private TextField shelfField;
-
-    @FXML
-    private TextField sectionField;
-
-    @FXML
-    private TextField boxField;
-
-    @FXML
-    private Label statusLabel;
+    @FXML private TextField catalogNumberField;
+    @FXML private TextField artistField;
+    @FXML private TextField albumField;
+    @FXML private ComboBox<Genre> genreComboBox;
+    @FXML private TextField labelField;
+    @FXML private TextField countryField;
+    @FXML private TextField yearField;
+    @FXML private TextField descriptionField;
+    @FXML private TextField priceField;
+    @FXML private ComboBox<FormatType> formatComboBox;
+    @FXML private ComboBox<SpeedType> speedComboBox;
+    @FXML private ComboBox<ConditionGrade> vinylConditionComboBox;
+    @FXML private ComboBox<ConditionGrade> coverConditionComboBox;
+    @FXML private TextField defectsNotesField;
+    @FXML private TextField shelfField;
+    @FXML private TextField sectionField;
+    @FXML private TextField boxField;
+    @FXML private ComboBox<SellerPerson> sellerComboBox;
+    @FXML private Label statusLabel;
 
     private VinylService vinylService;
     private CatalogService catalogService;
     private ReferenceService referenceService;
-
-    private Integer existingReleaseId; // ID существующего релиза (если найден)
-    private boolean isNewRelease = true; // флаг: новый релиз или существующий
 
     public void setVinylService(VinylService vinylService) {
         this.vinylService = vinylService;
@@ -85,13 +54,15 @@ public class AddNewInstanceController {
 
     public void setReferenceService(ReferenceService referenceService) {
         this.referenceService = referenceService;
-        loadSuppliers();
+        loadSellers();
     }
 
     @FXML
     public void initialize() {
         formatComboBox.getItems().setAll(FormatType.values());
         speedComboBox.getItems().setAll(SpeedType.values());
+        vinylConditionComboBox.getItems().setAll(ConditionGrade.values());
+        coverConditionComboBox.getItems().setAll(ConditionGrade.values());
 
         catalogNumberField.focusedProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal) {
@@ -111,9 +82,6 @@ public class AddNewInstanceController {
 
             if (existingRelease.isPresent()) {
                 Release release = existingRelease.get();
-                existingReleaseId = release.getReleaseId().intValue();
-                isNewRelease = false;
-
                 artistField.setText(release.getArtist());
                 albumField.setText(release.getAlbumTitle());
                 genreComboBox.setValue(release.getGenre());
@@ -125,15 +93,10 @@ public class AddNewInstanceController {
                 descriptionField.setText(release.getDescription());
 
                 setReleaseFieldsEditable(false);
-
-                statusLabel.setText("Релиз найден.");
+                statusLabel.setText("Релиз найден. Добавляем Б/У экземпляр.");
             } else {
-                existingReleaseId = null;
-                isNewRelease = true;
-
-                clearReleaseFields();
                 setReleaseFieldsEditable(true);
-
+                clearReleaseFields();
                 statusLabel.setText("Новый релиз. Заполните информацию о пластинке.");
             }
         } catch (Exception e) {
@@ -144,7 +107,6 @@ public class AddNewInstanceController {
     private void setReleaseFieldsEditable(boolean editable) {
         artistField.setEditable(editable);
         albumField.setEditable(editable);
-//        genreComboBox.setEditable(editable);
         labelField.setEditable(editable);
         countryField.setEditable(editable);
         yearField.setEditable(editable);
@@ -159,7 +121,6 @@ public class AddNewInstanceController {
         countryField.clear();
         yearField.clear();
         descriptionField.clear();
-        existingReleaseId = null;
     }
 
     private void loadGenres() {
@@ -169,77 +130,106 @@ public class AddNewInstanceController {
         }
     }
 
-    private void loadSuppliers() {
+    private void loadSellers() {
         if (referenceService != null) {
-            supplierComboBox.getItems().clear();
-            supplierComboBox.getItems().addAll(referenceService.getAllSuppliers());
+            sellerComboBox.getItems().clear();
+            sellerComboBox.getItems().addAll(referenceService.getAllSellers());
+        }
+    }
+
+    @FXML
+    private void handleManageSellers() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/group/lab6/lab6/view/SellerPersonView.fxml"));
+            Parent root = loader.load();
+
+            SellerPersonController controller = loader.getController();
+            controller.setReferenceService(referenceService);
+
+            Stage stage = new Stage();
+            stage.setTitle("Управление продавцами");
+            stage.setScene(new Scene(root, 800, 600));
+            stage.initOwner((Stage) catalogNumberField.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.showAndWait();
+
+            loadSellers();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Ошибка", "Не удалось открыть окно управления продавцами");
         }
     }
 
     @FXML
     private void handleAdd() {
         try {
-            String catalogNumber = getRequiredText(catalogNumberField, "Каталожный номер");
+            String catalogNumber = getRequiredText(catalogNumberField, "Каталоговый номер");
             BigDecimal price = getRequiredPrice(priceField);
             FormatType format = getRequiredFormat();
             SpeedType speed = getRequiredSpeed();
-            Integer supplierId = getRequiredSupplier();
+            ConditionGrade vinylCondition = getRequiredVinylCondition();
+            ConditionGrade coverCondition = getRequiredCoverCondition();
+            String defectsNotes = defectsNotesField.getText().trim();
 
             String locationShelf = shelfField.getText().trim();
             String locationSection = sectionField.getText().trim();
             String locationBox = boxField.getText().trim();
 
-            Integer instanceId;
-
-            if (isNewRelease) {
-                String artist = getRequiredText(artistField, "Исполнитель");
-                String album = getRequiredText(albumField, "Название альбома");
-                Integer genreId = null;
-                if (genreComboBox.getValue() != null) {
-                    genreId = genreComboBox.getValue().getGenreId().intValue();
-                }
-                String label = labelField.getText().trim();
-                String country = countryField.getText().trim();
-                validateCountry(country);
-                Integer year = null;
-                if (!yearField.getText().trim().isEmpty()) {
-                    try {
-                        year = Integer.parseInt(yearField.getText().trim());
-                    } catch (NumberFormatException e) {
-                        throw new ValidationException("Некорректный формат года");
-                    }
-                }
-                String description = descriptionField.getText().trim();
-
-                instanceId = vinylService.addNewInstanceWithRelease(
-                        catalogNumber, artist, album, genreId, price,
-                        format.name(), speed.toDbValue(),
-                        supplierId, locationShelf, locationSection, locationBox,
-                        label, country, year, description
-                );
-                statusLabel.setText("Успешно добавлен новый релиз и экземпляр.");
-            } else {
-                // Существующий релиз — добавляем только экземпляр
-                instanceId = vinylService.addNewInstanceToExistingRelease(
-                        existingReleaseId, price, format.name(), speed.toDbValue(),
-                        supplierId, locationShelf, locationSection, locationBox
-                );
-                statusLabel.setText("Успешно добавлен экземпляр к существующему релизу.");
+            SellerPerson selectedSeller = sellerComboBox.getValue();
+            if (selectedSeller == null) {
+                throw new ValidationException("Выберите продавца");
             }
+//            validatePhone(selectedSeller.getPhone());
+            String artist = artistField.getText().trim();
+            String album = albumField.getText().trim();
+            Integer genreId = null;
+            if (genreComboBox.getValue() != null) {
+                genreId = genreComboBox.getValue().getGenreId().intValue();
+            }
+//            String label = labelField.getText().trim();
+            String label = labelField.getText();
+            if (label == null) label = "";
+            label = label.trim();
+//            String country = countryField.getText().trim();
+            String country = countryField.getText();
+            if (country == null) country = "";
+            country = country.trim();
+            if (!country.isEmpty()) {
+                validateCountry(country);
+            }
+            Integer year = null;
+            if (!yearField.getText().trim().isEmpty()) {
+                try {
+                    year = Integer.parseInt(yearField.getText().trim());
+                } catch (NumberFormatException e) {
+                    throw new ValidationException("Некорректный формат года");
+                }
+            }
+//            String description = descriptionField.getText().trim();
+            String description = descriptionField.getText();
+            if (description == null) description = "";
+            description = description.trim();
 
+            Integer instanceId = vinylService.addUsedInstance(
+                    catalogNumber, artist, album, genreId, price,
+                    format.name(), speed.toDbValue(),
+                    vinylCondition.toDbValue(), coverCondition.toDbValue(), defectsNotes,
+                    selectedSeller.getFirstName(), selectedSeller.getLastName(), selectedSeller.getPhone(),
+                    locationShelf, locationSection, locationBox
+            );
+
+            statusLabel.setText("Успешно добавлен Б/У экземпляр!");
             clearForm();
 
         } catch (ValidationException e) {
             showAlert("Ошибка", e.getMessage());
         } catch (Exception e) {
-            showAlert("Ошибка", "Не удалось добавить пластинку: " + e.getMessage());
+            showAlert("Ошибка", "Не удалось добавить Б/У пластинку: " + e.getMessage());
         }
     }
 
     private void validateCountry(String country) {
-        if (country == null || country.trim().isEmpty()) {
-            throw new ValidationException("Введите страну");
-        }
         if (!country.matches("^[a-zA-Zа-яА-ЯёЁ\\s-]+$")) {
             throw new ValidationException("Страна должна содержать только буквы и пробелы");
         }
@@ -249,11 +239,6 @@ public class AddNewInstanceController {
     private void handleClear() {
         clearForm();
         statusLabel.setText("");
-        isNewRelease = true;
-        existingReleaseId = null;
-        setReleaseFieldsEditable(true);
-        clearReleaseFields();
-        catalogNumberField.clear();
     }
 
     @FXML
@@ -263,14 +248,24 @@ public class AddNewInstanceController {
     }
 
     private void clearForm() {
+        catalogNumberField.clear();
+        artistField.clear();
+        albumField.clear();
+        genreComboBox.setValue(null);
+        labelField.clear();
+        countryField.clear();
+        yearField.clear();
+        descriptionField.clear();
         priceField.clear();
         formatComboBox.setValue(null);
         speedComboBox.setValue(null);
-        supplierComboBox.setValue(null);
+        vinylConditionComboBox.setValue(null);
+        coverConditionComboBox.setValue(null);
+        defectsNotesField.clear();
         shelfField.clear();
         sectionField.clear();
         boxField.clear();
-        catalogNumberField.requestFocus();
+        sellerComboBox.setValue(null);
     }
 
     private String getRequiredText(TextField field, String fieldName) {
@@ -280,6 +275,15 @@ public class AddNewInstanceController {
         }
         return value;
     }
+
+//    private void validatePhone(String phone) {
+//        if (phone == null || phone.trim().isEmpty()) {
+//            throw new ValidationException("Телефон не может быть пустым");
+//        }
+//        if (!phone.matches("^[\\+\\d\\s\\-\\(\\)\\/]+$")) {
+//            throw new ValidationException("Телефон должен содержать только цифры и символы +, -, (, ), /");
+//        }
+//    }
 
     private BigDecimal getRequiredPrice(TextField field) {
         String value = field.getText().trim();
@@ -313,12 +317,20 @@ public class AddNewInstanceController {
         return speed;
     }
 
-    private Integer getRequiredSupplier() {
-        Supplier supplier = supplierComboBox.getValue();
-        if (supplier == null) {
-            throw new ValidationException("Поставщик не выбран");
+    private ConditionGrade getRequiredVinylCondition() {
+        ConditionGrade condition = vinylConditionComboBox.getValue();
+        if (condition == null) {
+            throw new ValidationException("Состояние винила не выбрано");
         }
-        return supplier.getSupplierId().intValue();
+        return condition;
+    }
+
+    private ConditionGrade getRequiredCoverCondition() {
+        ConditionGrade condition = coverConditionComboBox.getValue();
+        if (condition == null) {
+            throw new ValidationException("Состояние обложки не выбрано");
+        }
+        return condition;
     }
 
     private void showAlert(String title, String message) {

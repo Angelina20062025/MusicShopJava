@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Предоставляет методы для работы с продажами в базе данных.
+ */
 public interface SaleDAO {
     List<Map<String, Object>> getSoldReport(LocalDate startDate, LocalDate endDate);
     BigDecimal getCollectionValue();

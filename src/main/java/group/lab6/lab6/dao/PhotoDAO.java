@@ -4,6 +4,9 @@ import group.lab6.lab6.model.Photo;
 
 import java.util.List;
 
+/**
+ * Предоставляет методы для работы с фотографиями экземпляров в базе данных.
+ */
 public interface PhotoDAO {
     List<Photo> findByInstanceId(Integer instanceId);
     Integer addPhoto(Integer instanceId, String photoUrl, String description);

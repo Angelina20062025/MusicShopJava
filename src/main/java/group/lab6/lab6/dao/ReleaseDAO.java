@@ -5,6 +5,9 @@ import group.lab6.lab6.model.Release;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Предоставляет методы для работы с релизами в базе данных.
+ */
 public interface ReleaseDAO {
     Release update(Release release);
 

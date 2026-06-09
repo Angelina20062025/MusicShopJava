@@ -8,14 +8,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 public class MainApplication extends Application {
+    private static final Logger logger = LoggerFactory.getLogger(MainApplication.class);
     private AuthService authService;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        logger.info("Приложение запущено");
         authService = new AuthServiceImpl();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/group/lab6/lab6/view/login-view.fxml"));
@@ -36,6 +39,7 @@ public class MainApplication extends Application {
         if (authService != null && authService.isAuthenticated()) {
             authService.logout();
         }
+        logger.info("Приложение остановлено");
         super.stop();
     }
 

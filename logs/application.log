@@ -1,0 +1,126 @@
+09.06.2026 15:23:09.784 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 15:23:31.717 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 15:23:32.062 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Пользователь manager_user успешно аутентифицирован
+09.06.2026 15:23:51.357 [JavaFX Application Thread] INFO   g.l.l.c.MainController - Поиск пластинок по запросу: 
+09.06.2026 15:24:00.036 [JavaFX Application Thread] INFO   g.l.l.c.MainController - Пользователь выбрал пластинку для продажи: ID=24
+09.06.2026 15:24:01.108 [JavaFX Application Thread] INFO   g.l.l.s.i.VinylServiceImpl - Продажа экземпляра 24 по чеку CHK-1781007841108
+09.06.2026 15:24:01.117 [JavaFX Application Thread] INFO   g.l.l.s.i.VinylServiceImpl - Продажа успешно завершена, saleId=15
+09.06.2026 15:24:26.093 [JavaFX Application Thread] DEBUG  g.l.l.d.i.InstanceDAOImpl - Вызов add_new_instance_from_supplier для каталога тест
+09.06.2026 15:24:36.215 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение остановлено
+09.06.2026 16:07:36.758 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 16:07:54.574 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 16:07:54.805 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Пользователь manager_user успешно аутентифицирован
+09.06.2026 16:08:03.610 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение остановлено
+09.06.2026 18:03:13.018 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 18:10:12.188 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 18:10:44.957 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 18:28:20.226 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 18:29:02.808 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 18:29:17.777 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 18:29:18.005 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Пользователь manager_user успешно аутентифицирован
+09.06.2026 18:29:20.961 [JavaFX Application Thread] INFO   g.l.l.c.MainController - Пользователь выбрал пластинку для продажи: ID=31
+09.06.2026 18:29:22.018 [JavaFX Application Thread] INFO   g.l.l.s.i.VinylServiceImpl - Продажа экземпляра 31 по чеку CHK-1781018962018
+09.06.2026 18:29:22.026 [JavaFX Application Thread] INFO   g.l.l.s.i.VinylServiceImpl - Продажа успешно завершена, saleId=16
+09.06.2026 18:29:24.861 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение остановлено
+09.06.2026 18:34:23.121 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 18:39:52.755 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 18:41:53.479 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 18:41:57.535 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 18:41:57.770 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Пользователь manager_user успешно аутентифицирован
+09.06.2026 18:42:42.374 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 18:42:46.369 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 18:42:46.606 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Пользователь manager_user успешно аутентифицирован
+09.06.2026 18:44:03.093 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 18:44:07.082 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 18:44:07.324 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Пользователь manager_user успешно аутентифицирован
+09.06.2026 18:46:50.157 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 18:46:54.238 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 18:46:54.473 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Пользователь manager_user успешно аутентифицирован
+09.06.2026 18:49:27.203 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 18:49:41.769 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 18:49:42.102 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Пользователь manager_user успешно аутентифицирован
+09.06.2026 18:49:53.957 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение остановлено
+09.06.2026 18:50:49.726 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 18:50:53.697 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 18:50:53.935 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Пользователь manager_user успешно аутентифицирован
+09.06.2026 18:57:08.152 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 18:57:11.278 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 18:57:11.490 [JavaFX Application Thread] ERROR  g.l.l.s.i.AuthServiceImpl - Ошибка аутентификации пользователя manager_user: �����: ������������ "manager_user" �� ������ �������� ����������� (�� ������)
+09.06.2026 18:58:01.006 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 18:58:04.019 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 18:58:04.333 [JavaFX Application Thread] ERROR  g.l.l.s.i.AuthServiceImpl - Ошибка аутентификации пользователя manager_user: �����: ������������ "manager_user" �� ������ �������� ����������� (�� ������)
+09.06.2026 18:59:43.079 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 18:59:46.093 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 18:59:46.305 [JavaFX Application Thread] ERROR  g.l.l.s.i.AuthServiceImpl - Ошибка аутентификации пользователя manager_user: �����: ������������ "manager_user" �� ������ �������� ����������� (�� ������)
+09.06.2026 19:00:57.344 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 19:01:00.373 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 19:01:00.585 [JavaFX Application Thread] ERROR  g.l.l.s.i.AuthServiceImpl - Ошибка аутентификации пользователя manager_user: �����: ������������ "manager_user" �� ������ �������� ����������� (�� ������)
+09.06.2026 19:03:26.471 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 19:03:30.477 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 19:03:30.708 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Пользователь manager_user успешно аутентифицирован
+09.06.2026 19:03:44.317 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 19:03:47.331 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 19:03:47.648 [JavaFX Application Thread] ERROR  g.l.l.s.i.AuthServiceImpl - Ошибка аутентификации пользователя manager_user: �����: ������������ "manager_user" �� ������ �������� ����������� (�� ������)
+09.06.2026 19:04:50.103 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 19:04:54.114 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 19:04:54.359 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Пользователь manager_user успешно аутентифицирован
+09.06.2026 19:05:38.649 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 19:05:42.664 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 19:05:42.891 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Пользователь manager_user успешно аутентифицирован
+09.06.2026 19:06:07.836 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 19:06:24.586 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 19:06:24.920 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Пользователь manager_user успешно аутентифицирован
+09.06.2026 19:06:51.633 [JavaFX Application Thread] INFO   g.l.l.c.MainController - Пользователь выбрал пластинку для продажи: ID=32
+09.06.2026 19:06:52.449 [JavaFX Application Thread] INFO   g.l.l.s.i.VinylServiceImpl - Продажа экземпляра 32 по чеку CHK-1781021212448
+09.06.2026 19:06:52.457 [JavaFX Application Thread] INFO   g.l.l.s.i.VinylServiceImpl - Продажа успешно завершена, saleId=17
+09.06.2026 19:07:07.893 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение остановлено
+09.06.2026 19:09:04.557 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 19:09:17.418 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 19:09:17.652 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Пользователь manager_user успешно аутентифицирован
+09.06.2026 19:09:27.007 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение остановлено
+09.06.2026 19:09:39.639 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 19:09:43.665 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 19:09:43.901 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Пользователь manager_user успешно аутентифицирован
+09.06.2026 19:10:20.359 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 19:10:23.404 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 19:10:23.612 [JavaFX Application Thread] ERROR  g.l.l.s.i.AuthServiceImpl - Ошибка аутентификации пользователя manager_user: �����: ������������ "manager_user" �� ������ �������� ����������� (�� ������)
+09.06.2026 19:10:24.421 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 19:10:27.856 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 19:10:27.934 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Пользователь manager_user успешно аутентифицирован
+09.06.2026 19:10:30.099 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 19:10:33.842 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 19:10:33.843 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Пользователь manager_user успешно аутентифицирован
+09.06.2026 19:10:35.602 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 19:10:39.339 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 19:10:39.339 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Пользователь manager_user успешно аутентифицирован
+09.06.2026 19:41:18.367 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 19:41:31.675 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 19:41:31.900 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Пользователь manager_user успешно аутентифицирован
+09.06.2026 19:41:42.768 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение остановлено
+09.06.2026 19:41:47.766 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 19:42:00.083 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 19:42:00.707 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Пользователь manager_user успешно аутентифицирован
+09.06.2026 19:42:06.946 [JavaFX Application Thread] INFO   g.l.l.c.MainController - Поиск пластинок по запросу: 
+09.06.2026 19:42:08.222 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение остановлено
+09.06.2026 20:14:18.718 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 20:15:10.321 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 20:15:10.556 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Пользователь manager_user успешно аутентифицирован
+09.06.2026 20:16:03.582 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение остановлено
+09.06.2026 20:32:52.601 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 20:33:17.732 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 20:33:17.961 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Пользователь manager_user успешно аутентифицирован
+09.06.2026 20:35:39.262 [JavaFX Application Thread] DEBUG  g.l.l.d.i.InstanceDAOImpl - Вызов add_new_instance_from_supplier для каталога ROCK001
+09.06.2026 20:36:20.148 [JavaFX Application Thread] DEBUG  g.l.l.d.i.InstanceDAOImpl - Вызов add_new_instance_from_supplier для каталога ROCK001
+09.06.2026 20:36:44.283 [JavaFX Application Thread] INFO   g.l.l.c.MainController - Поиск пластинок по запросу: 
+09.06.2026 20:36:46.715 [JavaFX Application Thread] INFO   g.l.l.c.MainController - Поиск пластинок по запросу: 
+09.06.2026 20:36:49.139 [JavaFX Application Thread] INFO   g.l.l.c.MainController - Поиск пластинок по запросу: 
+09.06.2026 20:42:26.395 [JavaFX Application Thread] INFO   g.l.l.c.MainController - Поиск пластинок по запросу: 
+09.06.2026 20:42:33.144 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение остановлено
+09.06.2026 20:46:56.819 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение запущено
+09.06.2026 20:47:13.428 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager2026shop
+09.06.2026 20:47:13.626 [JavaFX Application Thread] ERROR  g.l.l.s.i.AuthServiceImpl - Ошибка аутентификации пользователя manager2026shop: �����: ������������ "manager2026shop" �� ������ �������� ����������� (�� ������)
+09.06.2026 20:47:24.147 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Попытка аутентификации пользователя: manager_user
+09.06.2026 20:47:24.222 [JavaFX Application Thread] INFO   g.l.l.s.i.AuthServiceImpl - Пользователь manager_user успешно аутентифицирован
+09.06.2026 20:49:07.303 [JavaFX Application Thread] DEBUG  g.l.l.d.i.InstanceDAOImpl - Вызов add_new_instance_from_supplier для каталога CLAS002
+09.06.2026 20:49:46.228 [JavaFX Application Thread] DEBUG  g.l.l.d.i.InstanceDAOImpl - Вызов add_new_instance_from_supplier для каталога CLAS002
+09.06.2026 20:57:57.698 [JavaFX Application Thread] INFO   g.l.l.MainApplication - Приложение остановлено

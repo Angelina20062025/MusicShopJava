@@ -58,6 +58,7 @@ public class SupplierController {
                         contactField.setText(newSelection.getContactInfo());
                     }
                 });
+        idColumn.setVisible(false);
     }
 
     @FXML
